@@ -100,23 +100,33 @@ async function fetchHighscores(){
   const empty = document.getElementById('highscores-empty');
   const list = document.getElementById('highscores-list');
 
-  if(!loading || !empty || !list) return;
+  if(!loading || !empty || !list){
+    console.error('Hall of Fame: éléments DOM introuvables');
+    return;
+  }
 
   loading.hidden = false;
   empty.hidden = true;
+  list.innerHTML = '';
 
-  try{
+  try {
     const res = await fetch('/api/highscores');
-    if(!res.ok) throw new Error('Impossible de charger les scores');
+    console.log('GET /api/highscores status =', res.status);
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
 
     const data = await res.json();
+    console.log('GET /api/highscores data =', data);
+
     highscoresCache = Array.isArray(data) ? data : [];
     renderHighscores();
-  }catch(err){
-    console.error(err);
+  } catch (err) {
+    console.error('fetchHighscores error:', err);
     loading.hidden = true;
 
-    if(!highscoresCache.length){
+    if (!highscoresCache.length) {
       empty.hidden = false;
       empty.textContent = 'Impossible de charger le classement.';
     }
@@ -124,31 +134,31 @@ async function fetchHighscores(){
 }
 
 function renderHighscores(){
-  const loading=document.getElementById('highscores-loading');
-  const empty=document.getElementById('highscores-empty');
-  const list=document.getElementById('highscores-list');
-  if(!loading||!empty||!list)return;
-  loading.hidden=true;
-  list.innerHTML='';
+  const loading = document.getElementById('highscores-loading');
+  const empty = document.getElementById('highscores-empty');
+  const list = document.getElementById('highscores-list');
+
+  if(!loading || !empty || !list) return;
+
+  loading.hidden = true;
+  list.innerHTML = '';
+
   if(!highscoresCache.length){
-    empty.hidden=false;
-    empty.textContent='Aucun score enregistré pour le moment.';
+    empty.hidden = false;
     return;
   }
-  empty.hidden=true;
-  highscoresCache.slice(0,10).forEach((entry,index)=>{
-    const row=document.createElement('div');
-    row.className='highscore-row';
-    const fullname=[entry.first_name, entry.last_name].filter(Boolean).join(' ').trim() || 'Aventurier inconnu';
-    const dragonBadge=entry.killed_dragon ? ' · 🐉 Dragon' : '';
-    row.innerHTML=
-      `<div class="highscore-rank">#${index+1}</div>
-       <div>
-         <div class="highscore-name">${escapeHtml(fullname)}</div>
-         <div class="highscore-meta">${escapeHtml(entry.hero_name || 'Héros')} · ${escapeHtml(entry.hero_class || 'Classe inconnue')} · ${entry.gold || 0}💰 · ${entry.items_count || 0} objet(s) · ${entry.remaining_body || 0} PV${dragonBadge}</div>
-       </div>
-       <div class="highscore-score">${entry.score || 0}</div>`;
-    list.appendChild(row);
+
+  empty.hidden = true;
+
+  highscoresCache.forEach((entry, index) => {
+    const item = document.createElement('div');
+    item.className = 'highscore-item';
+    item.innerHTML = `
+      <span class="rank">#${index + 1}</span>
+      <span class="name">${entry.first_name} ${entry.last_name}</span>
+      <span class="score">${entry.score}</span>
+    `;
+    list.appendChild(item);
   });
 }
 
@@ -1025,3 +1035,8 @@ function startGame(){
 
 document.getElementById('start-btn').onclick=()=>{if(selectedHeroes.length===numPlayers)startGame();};
 renderSetup();
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSetup();
+  showSetup();
+});
