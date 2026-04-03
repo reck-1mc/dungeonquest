@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DungeonQuest — 4e Édition Révisée</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="setup-box">
+    <div class="setup-title">⚔ DungeonQuest ⚔</div>
+    <div class="setup-sub">4e Édition Révisée — Portage Numérique</div>
+    <div class="panel-title" style="text-align:left">Nombre de héros</div>
+    <div class="player-count">
+      <button class="pc-btn active" data-n="1">1</button>
+      <button class="pc-btn" data-n="2">2</button>
+      <button class="pc-btn" data-n="3">3</button>
+      <button class="pc-btn" data-n="4">4</button>
+    </div>
+    <div class="panel-title" style="text-align:left;margin-top:8px">Choisissez vos héros</div>
+    <div class="hero-picker" id="hero-picker"></div>
+    <button class="btn primary" id="start-btn" style="margin-top:12px;width:100%;justify-content:center;font-size:13px;padding:12px;">Pénétrer dans le Donjon</button>
+    <div class="setup-highscores">
+      <div class="panel-title" style="text-align:left;margin-top:14px">🏆 Hall of Fame</div>
+      <div class="setup-score-sub">Top 10 des aventuriers qui se sont échappés du donjon</div>
+      <div id="highscores-loading" class="highscores-loading">Chargement des scores…</div>
+      <div id="highscores-empty" class="highscores-empty" hidden>Aucun score enregistré pour le moment.</div>
+      <div id="highscores-list" class="highscores-list"></div>
+    </div>
+
+    <div style="margin-top:12px;font-size:10px;color:#444;font-style:italic;">Projet personnel non officiel — DungeonQuest © Fantasy Flight Games / Games Workshop.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div id="header">
+    <h1>⚔ DUNGEONQUEST ⚔</h1>
+    <div class="subtitle">Le château de Dragonfire vous attend… ou vous dévore</div>
+  </div>
+  <!-- SABLIER PLEINE LARGEUR -->
+  <div id="time-bar-wrap">
+    <div id="time-track"></div>
+    <div id="time-label"></div>
+  </div>
+  <!-- PHASES FINES -->
+  <div id="phase-bar">
+    <div class="phase-step active" id="ph-move"><span class="ph-icon">🎲</span>DÉPLACEMENT</div>
+    <div class="phase-step" id="ph-event"><span class="ph-icon">⚡</span>ÉVÉNEMENT</div>
+    <div class="phase-step" id="ph-combat"><span class="ph-icon">⚔</span>COMBAT</div>
+    <div class="phase-step" id="ph-end"><span class="ph-icon">⌛</span>FIN DE TOUR</div>
+  </div>
+  <div id="main">
+    <!-- LEFT: héros uniquement -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">⚔ Héros</div>
+        <div id="hero-list"></div>
+      </div>
+    </div>
+    <!-- CENTER: plateau + journal en bas -->
+    <div>
+      <div id="board-wrap"><div id="board"></div></div>
+      <div id="log-zone">
+        <div id="log-zone-title">📖 JOURNAL</div>
+        <div id="log"></div>
+        <div id="dice-area"></div>
+      </div>
+    </div>
+    <!-- RIGHT: héros actif + actions -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">🧙 Héros actif</div>
+        <div id="current-hero-box"></div>
+        <div id="card-reveal"></div>
+      </div>
+      <div id="action-zone" style="margin-top:8px">
+        <div id="action-label">ACTIONS DISPONIBLES</div>
+        <div id="actions"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL (blocks all interaction) -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-extra"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+<div id="night-overlay"></div>
+
+
+<script src="./app.js"></script>
+</body>
+</html>
