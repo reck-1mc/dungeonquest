@@ -96,24 +96,30 @@ function getScorePayload(hero){
 }
 
 async function fetchHighscores(){
-  const loading=document.getElementById('highscores-loading');
-  const empty=document.getElementById('highscores-empty');
-  const list=document.getElementById('highscores-list');
-  if(!loading||!empty||!list)return;
-  loading.hidden=false;
-  empty.hidden=true;
-  list.innerHTML='';
+  const loading = document.getElementById('highscores-loading');
+  const empty = document.getElementById('highscores-empty');
+  const list = document.getElementById('highscores-list');
+
+  if(!loading || !empty || !list) return;
+
+  loading.hidden = false;
+  empty.hidden = true;
+
   try{
-    const res=await fetch('/api/highscores');
+    const res = await fetch('/api/highscores');
     if(!res.ok) throw new Error('Impossible de charger les scores');
-    const data=await res.json();
-    highscoresCache=Array.isArray(data)?data:[];
+
+    const data = await res.json();
+    highscoresCache = Array.isArray(data) ? data : [];
     renderHighscores();
   }catch(err){
-    loading.hidden=true;
-    empty.hidden=false;
-    empty.textContent='Impossible de charger le classement.';
     console.error(err);
+    loading.hidden = true;
+
+    if(!highscoresCache.length){
+      empty.hidden = false;
+      empty.textContent = 'Impossible de charger le classement.';
+    }
   }
 }
 
@@ -975,8 +981,15 @@ function nextHeroTurn(){
 //  SETUP
 // ══════════════════════════════════════════
 let selectedHeroes=[],numPlayers=1;
-function showSetup(){document.getElementById('setup').classList.remove('hidden');document.getElementById('app').style.display='none';selectedHeroes=[];numPlayers=1;renderSetup();
-fetchHighscores();fetchHighscores();}
+
+function showSetup(){
+  document.getElementById('setup').classList.remove('hidden');
+  document.getElementById('app').style.display='none';
+  selectedHeroes = [];
+  numPlayers = 1;
+  renderSetup();
+  fetchHighscores();
+}
 
 function renderSetup(){
   const picker=document.getElementById('hero-picker');picker.innerHTML='';
